@@ -1,6 +1,8 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 let filmes = [
     {
@@ -13,12 +15,12 @@ let filmes = [
     }
 ]
 
-// get: hhtp:localhost:3000/oi
+// get: http:localhost:3000/oi
 app.get('/oi', (req, res) => {
     res.send('oi');
 });
 
-// get: hhtp:localhost:3000/filmes
+// get: http:localhost:3000/filmes
 app.get('/filmes', (req, res) =>{
     res.json(filmes)
 });
