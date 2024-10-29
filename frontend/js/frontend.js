@@ -1,7 +1,5 @@
 const protocolo = 'http://';
 const baseURL = 'localhost:3000';
-const endPoint = '/filmes';
-const URLcompleta = `${protocolo}${baseURL}${endPoint}`;
 
 function listarFilmes(filmes){
     // posicionar-se no corpo da tabela
@@ -22,11 +20,15 @@ function listarFilmes(filmes){
 }
 
 async function obterFilmes(){
+    const FilmesEndPoint = '/filmes';
+    const URLcompleta = `${protocolo}${baseURL}${FilmesEndPoint}`;
     const filmes = (await axios.get(URLcompleta)).data;
     listarFilmes(filmes);
 }
 
 async function cadastrarFilme(){
+    const FilmesEndPoint = '/filmes';
+    const URLcompleta = `${protocolo}${baseURL}${FilmesEndPoint}`;
     // capturar os inputs
     let tituloInput = document.querySelector('#tituloInput');
     let sinopseInput = document.querySelector('#sinopseInput');
