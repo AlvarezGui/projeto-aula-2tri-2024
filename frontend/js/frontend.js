@@ -1,3 +1,5 @@
+// const { toFormData } = require("axios");
+
 const protocolo = 'http://';
 const baseURL = 'localhost:3000';
 
@@ -21,14 +23,14 @@ function listarFilmes(filmes){
 
 async function obterFilmes(){
     const FilmesEndPoint = '/filmes';
-    const URLcompleta = `${protocolo}${baseURL}${FilmesEndPoint}`;
+    const URLcompleta = `http://localhost:3000${FilmesEndPoint}`;
     const filmes = (await axios.get(URLcompleta)).data;
     listarFilmes(filmes);
 }
 
 async function cadastrarFilme(){
     const FilmesEndPoint = '/filmes';
-    const URLcompleta = `${protocolo}${baseURL}${FilmesEndPoint}`;
+    const URLcompleta = `http://localhost:3000${FilmesEndPoint}`;
     // capturar os inputs
     let tituloInput = document.querySelector('#tituloInput');
     let sinopseInput = document.querySelector('#sinopseInput');
@@ -46,12 +48,52 @@ async function cadastrarFilme(){
         listarFilmes(filmes);
     }
     else{
-        let alert = document.querySelector('.alert');
-        alert.classList.add('show');
-        alert.classList.remove('d-none');
-        setTimeout(() => {
-            alert.classList.remove('show');
-            alert.classList.add('d-none');
-        }, 2000);
+        exibirAlerta('.alert-filme', "Preencha todos os campos", ["show", "alert-danger"], ["d-none"], 2000);;
     }
+}
+
+async function cadastrarUsuario(){
+    let usuarioCadastroInput = document.querySelector("#usuarioCadastroInput");
+    let passwordCadastroInput = document.querySelector("#passwordCadastroInput");
+    let usuarioCadastro = usuarioCadastroInput.value;
+    let passwordCadastro = passwordCadastroInput.value;
+
+    if(usuarioCadastro && passwordCadastro){
+        try{
+            
+            const cadastroEnpoint = '/signup';
+            const URLcompleta = `http://localhost:3000${cadastroEnpoint}`;
+            await axios.post(URLcompleta, {login: usuarioCadastro, password: passwordCadastro});
+            usuarioCadastroInput.value = "";
+            passwordCadastroInput.value = "";
+            
+            exibirAlerta(".alert-modal-cadastro", "Usuário cadastrado com sucesso!", ["show", "alert-success"], ["d-none"], 2000);
+            OcultarModal("#modalCadastro", 2000);
+        }
+        catch(err){
+            console.log(err);
+            exibirAlerta(".alert-modal-cadastro", "Não foi possível cadastrar", ["show", "alert-danger"], ["d-none"], 2000);
+        }
+    }
+    else{
+        exibirAlerta('.alert-modal-cadastro', "Preencha todos os campos", ["show", "alert-danger"], ["d-none"], 2000);
+    }
+}
+
+function exibirAlerta(seletor, innerHTML, classesToAdd, classesToRemove, timeout){
+    let alert = document.querySelector(seletor);
+    alert.innerHTML = innerHTML;
+    alert.classList.add(...classesToAdd);
+    alert.classList.remove(...classesToRemove);
+    setTimeout(() => {
+        alert.classList.remove(...classesToAdd);
+        alert.classList.add(...classesToRemove);
+    }, timeout);
+}
+
+function OcultarModal(seletor, timeout){
+    setTimeout(() => {
+        let modalCadastro = bootstrap.Modal.getInstance(document.querySelector(seletor));
+        modalCadastro.hide();
+    }, timeout);
 }
